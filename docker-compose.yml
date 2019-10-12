@@ -1,0 +1,30 @@
+version: '3.2'
+services:
+  library_db:
+    image: postgres:alpine
+    networks:
+      - net
+    ports:
+      - 5432:5432
+    volumes:
+      - library_db_data:/var/lib/postgresql/data/pg_data
+    environment:
+      POSTGRES_PASSWORD: library
+      POSTGRES_DB: library
+      POSTGRES_USER: library
+      PGDATA: /var/lib/postgresql/data/pg_data
+  text_db:
+    image: mongo:latest
+    environment:
+      - MONGO_DATA_DIR=/data/db
+    volumes:
+      - text_db_data:/data/db
+      - text_db_config:/data/configdb
+    ports:
+      - 27017:27017
+networks:
+  net:
+volumes:
+  library_db_data:
+  text_db_data:
+  text_db_config:
