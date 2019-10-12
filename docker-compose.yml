@@ -1,17 +1,18 @@
 version: '3.2'
+
 services:
   novel-ai:
     image: novel-ai:latest
-    container_name: wbt_novel-ai
     networks:
-      - net
+      - app
+      - tracing
     ports:
       - 9080:8080
+
   library_db:
     image: postgres:alpine
-    container_name: wbt_library_db
     networks:
-      - net
+      - app
     ports:
       - 5432:5432
     volumes:
@@ -21,9 +22,11 @@ services:
       POSTGRES_DB: library
       POSTGRES_USER: library
       PGDATA: /var/lib/postgresql/data/pg_data
+
   text_db:
     image: mongo:latest
-    container_name: wbt_text_db
+    networks:
+      - app
     environment:
       - MONGO_DATA_DIR=/data/db
     volumes:
@@ -31,9 +34,68 @@ services:
       - text_db_config:/data/configdb
     ports:
       - 27017:27017
+
+  jaeger-collector:
+    image: jaegertracing/jaeger-collector
+    command: ["--cassandra.keyspace=jaeger_v1_dc1", "--cassandra.servers=cassandra", "--collector.zipkin.http-port=9411"]
+    networks:
+      - tracing
+#    ports:
+#      - "14269"
+#      - "14268:14268"
+#      - "14267"
+#      - "14250"
+#      - "9411:9411"
+    restart: on-failure
+    depends_on:
+      - cassandra-schema
+
+  jaeger-query:
+    image: jaegertracing/jaeger-query
+    command: ["--cassandra.keyspace=jaeger_v1_dc1", "--cassandra.servers=cassandra"]
+    networks:
+      - tracing
+    ports:
+      - "16686:16686"
+#      - "16687"
+    restart: on-failure
+    depends_on:
+      - cassandra-schema
+
+  jaeger-agent:
+    image: jaegertracing/jaeger-agent
+    command: ["--reporter.grpc.host-port=jaeger-collector:14250"]
+    networks:
+      - tracing
+    ports:
+#      - "5775:5775/udp"
+      - "6831:6831/udp"
+#      - "6832:6832/udp"
+#      - "5778:5778"
+    restart: on-failure
+    depends_on:
+      - jaeger-collector
+
+  cassandra:
+    image: cassandra:3.9
+    networks:
+      - tracing
+    volumes:
+      - cassandra_db_data:/var/lib/cassandra
+
+  cassandra-schema:
+    image: jaegertracing/jaeger-cassandra-schema
+    networks:
+      - tracing
+    depends_on:
+      - cassandra
+
 networks:
-  net:
+  app:
+  tracing:
+
 volumes:
   library_db_data:
   text_db_data:
   text_db_config:
+  cassandra_db_data:

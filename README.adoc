@@ -1,0 +1,12 @@
+= Tracing Workbench
+
+This projects allows to tinker with tracing by providing some services that report to a Jaeger tracing backend.
+
+== Starting the application
+
+1. Build with `./gradlew build`
+1. Start with `docker-compose up -d`
+
+== Accessing Jaeger UI
+
+The UI of Jaeger is available at: http://localhost:16686/search

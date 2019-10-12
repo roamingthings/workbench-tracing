@@ -48,6 +48,7 @@ val mockitoKotlinVersion: String by extra
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("io.opentracing.contrib:opentracing-spring-jaeger-cloud-starter:2.0.3")
 
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
@@ -122,6 +123,8 @@ tasks {
         instruction("HEALTHCHECK CMD wget --quiet --tries=1 --spider http://localhost:8080/actuator/health || exit 1")
     }
 }
+
+tasks.build { dependsOn(tasks.dockerBuildImage) }
 
 idea {
     module {
