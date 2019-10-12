@@ -1,0 +1,24 @@
+@startuml
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/release/1-0/C4_Context.puml
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/release/1-0/C4_Container.puml
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/release/1-0/C4_Component.puml
+
+Person(user, "User")
+Container(novelAiService, “NovelAiService“, “Kotlin/Spring Boot”)
+Container(authorService, “AuthorService“, “Kotlin/Spring Boot”)
+Container(textLibraryService, "TextLibraryService", "Kotlin/Spring Boot")
+Container(documentGeneratorService, "DocumentGeneratorService", "TypeScript/Express")
+Container(novelLibraryService, "NovelLibraryService", "Java/Spring Boot")
+ContainerDb(postgres, "Library DB", "PostgreSQL")
+ContainerDb(mongo, "Texts DB", "MongoDB")
+
+Rel(user, novelAiService, "Generate Novel")
+Rel(novelAiService, authorService, "Author Text")
+Rel(novelAiService, documentGeneratorService, "Generates Novel PDF")
+Rel(novelAiService, novelLibraryService, "Stores Novel")
+Rel(authorService, textLibraryService, "Fetches paragraphs")
+Rel(textLibraryService, mongo, " ")
+Rel(novelAiService, textLibraryService, "Fetches title")
+Rel(novelLibraryService, postgres, " ")
+
+@enduml
