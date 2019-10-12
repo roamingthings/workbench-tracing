@@ -1,7 +1,15 @@
 version: '3.2'
 services:
+  novel-ai:
+    image: novel-ai:latest
+    container_name: wbt_novel-ai
+    networks:
+      - net
+    ports:
+      - 9080:8080
   library_db:
     image: postgres:alpine
+    container_name: wbt_library_db
     networks:
       - net
     ports:
@@ -15,6 +23,7 @@ services:
       PGDATA: /var/lib/postgresql/data/pg_data
   text_db:
     image: mongo:latest
+    container_name: wbt_text_db
     environment:
       - MONGO_DATA_DIR=/data/db
     volumes:

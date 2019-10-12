@@ -1,9 +1,11 @@
+import com.bmuschko.gradle.docker.tasks.image.Dockerfile
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     id("org.springframework.boot") version "2.1.9.RELEASE"
     id("io.spring.dependency-management") version "1.0.8.RELEASE"
+    id("com.bmuschko.docker-spring-boot-application") version "5.2.0"
     kotlin("jvm") version "1.3.50"
     kotlin("plugin.spring") version "1.3.50"
     idea
@@ -106,6 +108,21 @@ val integrationTest = task<Test>("integrationTest") {
 }
 
 tasks.check { dependsOn(integrationTest) }
+
+docker {
+    springBootApplication {
+        baseImage.set("openjdk:11")
+        ports.set(listOf(8080))
+        tag.set("novel-ai:latest")
+    }
+}
+
+tasks {
+    "dockerCreateDockerfile"(Dockerfile::class) {
+        instruction("HEALTHCHECK CMD wget --quiet --tries=1 --spider http://localhost:8080/actuator/health || exit 1")
+    }
+}
+
 idea {
     module {
         testSourceDirs = testSourceDirs + sourceSets["testIntegration"].withConvention(KotlinSourceSet::class) {
