@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: text-library-service
+  jackson:
+    serialization:
+      INDENT_OUTPUT: true
+      WRITE_DATES_AS_TIMESTAMPS: false
+      FAIL_ON_EMPTY_BEANS: false
+opentracing:
+  jaeger:
+    log-spans: false
+    udp-sender:
+      host: jaeger-agent

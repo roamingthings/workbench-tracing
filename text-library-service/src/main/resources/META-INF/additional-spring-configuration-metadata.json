@@ -1,0 +1,9 @@
+{
+  "properties": [
+    {
+      "name": "opentracing.jaeger.enabled",
+      "type": "java.lang.Boolean",
+      "description": "Enable or disable tracing completely. Defaults to enabled."
+    }
+  ]
+}

@@ -1,7 +1,8 @@
 rootProject.name = "workbench-tracing"
 
-include("novelAiService")
 include("authorService")
+include("novelAiService")
+include("textLibraryService")
 
 val upperCaseLetters = "\\p{Upper}".toRegex()
 

@@ -17,6 +17,15 @@ services:
     ports:
       - 9081:8080
 
+  text-library-service:
+    image: text-library-service:latest
+    networks:
+      - app
+      - database
+      - tracing
+    ports:
+      - 9082:8080
+
   library_db:
     image: postgres:alpine
     networks:

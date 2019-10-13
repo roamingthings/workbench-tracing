@@ -1,0 +1,6 @@
+opentracing:
+  jaeger:
+    enabled: false
+author:
+  text-library-service:
+    base-uri: http://localhost:10082
