@@ -12,7 +12,7 @@ services:
   library_db:
     image: postgres:alpine
     networks:
-      - app
+      - database
     ports:
       - 5432:5432
     volumes:
@@ -26,7 +26,7 @@ services:
   text_db:
     image: mongo:latest
     networks:
-      - app
+      - database
     environment:
       - MONGO_DATA_DIR=/data/db
     volumes:
@@ -92,6 +92,7 @@ services:
 
 networks:
   app:
+  database:
   tracing:
 
 volumes:
