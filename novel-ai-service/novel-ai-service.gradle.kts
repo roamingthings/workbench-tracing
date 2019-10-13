@@ -45,6 +45,7 @@ val testIntegrationImplementation by configurations.getting {
 configurations["testIntegrationRuntimeOnly"].extendsFrom(configurations.runtimeOnly.get())
 
 val mockitoKotlinVersion: String by extra
+val wireMockVersion: String by extra
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-web")
@@ -66,6 +67,8 @@ dependencies {
     testImplementation("org.mockito:mockito-core")
     testImplementation("org.mockito:mockito-junit-jupiter")
     testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:$mockitoKotlinVersion")
+
+    testIntegrationImplementation("com.github.tomakehurst:wiremock-standalone:$wireMockVersion")
 }
 
 tasks.withType<KotlinCompile> {

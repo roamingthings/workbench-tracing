@@ -1,3 +1,6 @@
 opentracing:
   jaeger:
     enabled: false
+novelai:
+  author-service:
+    base-uri: http://localhost:10081

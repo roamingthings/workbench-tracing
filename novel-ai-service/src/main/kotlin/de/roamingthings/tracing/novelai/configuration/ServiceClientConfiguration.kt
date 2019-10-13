@@ -6,13 +6,11 @@ import org.springframework.boot.web.client.RestTemplateBuilder
 import org.springframework.context.annotation.Bean
 import org.springframework.web.client.RestTemplate
 
-
-
 @Configuration
-class ServiceClientConfiguration {
-    @Value("\${novelai.author-service.base-uri")
-    lateinit var authorServiceBaseUri: String
-
+class ServiceClientConfiguration(
+    @Value("\${novelai.author-service.base-uri}")
+    private val authorServiceBaseUri: String
+) {
     @Bean
     fun authorServiceRestTemplate(builder: RestTemplateBuilder): RestTemplate {
         return builder.rootUri(authorServiceBaseUri).build()

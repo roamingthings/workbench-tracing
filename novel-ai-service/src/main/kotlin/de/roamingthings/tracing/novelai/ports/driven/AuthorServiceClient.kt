@@ -15,6 +15,13 @@ class AuthorServiceClient(
     fun generateNovelContent(): String {
         log.info("Asking author for a new novel content")
 
-        return "This is a very short test novel."
+        val content = authorServiceRestTemplate.postForObject("/contents", null, String::class.java)
+        log.debug("Got novel content {}", content)
+
+        if (content == null) {
+            throw EmptyContentException()
+        }
+
+        return content
     }
 }

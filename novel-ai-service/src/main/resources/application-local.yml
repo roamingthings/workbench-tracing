@@ -4,4 +4,4 @@ opentracing:
       host: localhost
 novelai:
   author-service:
-    base-uri: http://author-service:9081
+    base-uri: http://localhost:9081
