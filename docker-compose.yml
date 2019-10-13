@@ -9,6 +9,14 @@ services:
     ports:
       - 9080:8080
 
+  author-service:
+    image: author-service:latest
+    networks:
+      - app
+      - tracing
+    ports:
+      - 9081:8080
+
   library_db:
     image: postgres:alpine
     networks:

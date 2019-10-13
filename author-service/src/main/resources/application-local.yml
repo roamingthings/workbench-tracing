@@ -1,0 +1,9 @@
+server:
+  port: 8081
+opentracing:
+  jaeger:
+    udp-sender:
+      host: localhost
+author:
+  text-library-service:
+    base-uri: http://localhost:9082

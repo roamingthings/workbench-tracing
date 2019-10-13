@@ -1,0 +1,19 @@
+{
+  "properties": [
+    {
+      "name": "opentracing.jaeger.enabled",
+      "type": "java.lang.Boolean",
+      "description": "Enable or disable tracing completely. Defaults to enabled."
+    },
+    {
+      "name": "author.content.num-paragraphs",
+      "type": "java.lang.Integer",
+      "description": "Number of paragraphs that a novel should have."
+    },
+    {
+      "name": "author.text-library-service.base-uri",
+      "type": "java.lang.String",
+      "description": "Base URI for the text library service."
+    }
+  ]
+}
