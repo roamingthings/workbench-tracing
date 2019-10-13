@@ -2,6 +2,10 @@
 
 This projects allows to tinker with tracing by providing some services that report to a Jaeger tracing backend.
 
+== Configure Docker
+
+In order to calculate dependencies set the memory that is available for docker to at leas 2.5GiB.
+
 == Starting the application
 
 1. Build with `./gradlew build`

@@ -93,6 +93,17 @@ services:
     depends_on:
       - jaeger-collector
 
+  jaeger-spark-dependencies:
+    image: jaegertracing/spark-dependencies
+    networks:
+      - tracing
+    restart: on-failure
+    environment:
+      - STORAGE=cassandra
+      - CASSANDRA_CONTACT_POINTS=cassandra
+    depends_on:
+      - jaeger-collector
+
   cassandra:
     image: cassandra:3.9
     networks:
