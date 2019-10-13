@@ -11,3 +11,6 @@ opentracing:
     log-spans: true
     udp-sender:
       host: jaeger-agent
+novelai:
+  author-service:
+    base-uri: http://author-service:8080

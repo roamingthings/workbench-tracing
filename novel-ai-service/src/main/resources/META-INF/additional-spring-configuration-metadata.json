@@ -4,6 +4,11 @@
       "name": "opentracing.jaeger.enabled",
       "type": "java.lang.Boolean",
       "description": "Enable or disable tracing completely. Defaults to enabled."
+    },
+    {
+      "name": "novelai.author-service.base-uri",
+      "type": "java.lang.String",
+      "description": "Base URI for the author service."
     }
   ]
 }

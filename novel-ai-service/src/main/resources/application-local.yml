@@ -2,3 +2,6 @@ opentracing:
   jaeger:
     udp-sender:
       host: localhost
+novelai:
+  author-service:
+    base-uri: http://author-service:9081
