@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: novel-library-service
+  datasource:
+    url: jdbc:postgresql://library_db:5432/library
+    username: library
+    password: library
+  jpa:
+    hibernate:
+      ddl-auto: update
+jackson:
+    serialization:
+      INDENT_OUTPUT: true
+      WRITE_DATES_AS_TIMESTAMPS: false
+      FAIL_ON_EMPTY_BEANS: false
+opentracing:
+  jaeger:
+    log-spans: false
+    udp-sender:
+      host: jaeger-agent

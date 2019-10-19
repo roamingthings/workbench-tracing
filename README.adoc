@@ -24,3 +24,7 @@ The UI of Jaeger is available at: http://localhost:16686/search
 `curl -v -X POST http://localhost:9080/novels`
  The `Location` header of the response will contain the URI where the generated
 document can be retrieved.
+
+=== Manually store a novel
+
+`curl -v -X PUT -H "Content-Type: application/json" -d '{"authored": "2019-10-19T23:42:00Z", "title": "A title", "content": "A content"}' http://localhost:9083/novels/fcea267a-31df-472a-ae0e-8afda51d648d`

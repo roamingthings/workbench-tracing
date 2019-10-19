@@ -26,6 +26,15 @@ services:
     ports:
       - 9082:8080
 
+  novel-library-service:
+    image: novel-library-service:latest
+    networks:
+      - app
+      - database
+      - tracing
+    ports:
+      - 9083:8080
+
   library_db:
     image: postgres:alpine
     networks:
