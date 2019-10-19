@@ -105,9 +105,6 @@ val integrationTest = task<Test>("integrationTest") {
         events("passed", "skipped", "failed")
     }
 
-    // Always run
-    outputs.upToDateWhen { false }
-
     shouldRunAfter("test")
 }
 
