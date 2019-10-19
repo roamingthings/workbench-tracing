@@ -16,7 +16,7 @@ class TextLibraryServiceClient(
         log.info("Getting a random paragraph")
 
         val content = textLibraryServiceRestTemplate.getForObject("/paragraphs/random", String::class.java)
-        log.debug("Got paragraph {}", content)
+        log.debug("Got paragraph: \"{}\"", content)
 
         return content
     }

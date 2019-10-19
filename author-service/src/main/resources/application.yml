@@ -16,3 +16,6 @@ author:
     num-paragraphs: 5
   text-library-service:
     base-uri: http://text-library-service:8080
+logging:
+  level:
+    de.roamingthings: DEBUG
