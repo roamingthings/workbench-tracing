@@ -1,6 +1,13 @@
 spring:
   application:
     name: text-library-service
+  data:
+    mongodb:
+      host: text_db
+      #      port: [port]
+      #      username: [username]
+      #      password: [password]
+      database: text_library
   jackson:
     serialization:
       INDENT_OUTPUT: true

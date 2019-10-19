@@ -46,11 +46,16 @@ services:
       - database
     environment:
       - MONGO_DATA_DIR=/data/db
-    volumes:
-      - text_db_data:/data/db
-      - text_db_config:/data/configdb
+#    volumes:
+#      - text_db_data:/data/db
+#      - text_db_config:/data/configdb
     ports:
       - 27017:27017
+
+  text_db-seed:
+    build: ./text_db-seed
+    networks:
+      - database
 
   jaeger-collector:
     image: jaegertracing/jaeger-collector
@@ -125,6 +130,6 @@ networks:
 
 volumes:
   library_db_data:
-  text_db_data:
-  text_db_config:
+#  text_db_data:
+#  text_db_config:
   cassandra_db_data:

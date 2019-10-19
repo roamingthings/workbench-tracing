@@ -11,6 +11,16 @@ In order to calculate dependencies set the memory that is available for docker t
 1. Build with `./gradlew build`
 1. Start with `docker-compose up -d`
 
+If you want to force a re-build of images (in particular the text_db-seed image) run `docker-compose build`.
+
 == Accessing Jaeger UI
 
 The UI of Jaeger is available at: http://localhost:16686/search
+
+== Usage
+
+=== Create a new novel
+
+`curl -v -X POST http://localhost:9080/novels`
+ The `Location` header of the response will contain the URI where the generated
+document can be retrieved.

@@ -49,6 +49,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("io.opentracing.contrib:opentracing-spring-jaeger-cloud-starter:2.0.3")
+    implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
 
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
@@ -61,6 +62,8 @@ dependencies {
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.junit.jupiter:junit-jupiter")
+
+    testImplementation("de.flapdoodle.embed:de.flapdoodle.embed.mongo")
 
     testImplementation("org.assertj:assertj-core")
     testImplementation("org.mockito:mockito-core")
