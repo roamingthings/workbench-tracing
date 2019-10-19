@@ -1,6 +1,7 @@
 package de.roamingthings.tracing.testing.mock
 
 import de.roamingthings.tracing.testing.mock.AuthorServiceMock.Companion.authorServiceMock
+import de.roamingthings.tracing.testing.mock.NovelLibraryServiceMock.Companion.novelLibraryServiceMock
 import org.junit.jupiter.api.BeforeEach
 
 abstract class WireMockTestBase {
@@ -16,5 +17,7 @@ abstract class WireMockTestBase {
     private fun resetMocks() {
         authorServiceMock.startIfNotRunning()
         authorServiceMock.reset()
+        novelLibraryServiceMock.startIfNotRunning()
+        novelLibraryServiceMock.reset()
     }
 }

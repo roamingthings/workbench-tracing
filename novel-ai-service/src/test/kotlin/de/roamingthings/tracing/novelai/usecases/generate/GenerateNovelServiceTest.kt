@@ -3,7 +3,9 @@ package de.roamingthings.tracing.novelai.usecases.generate
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.verify
 import de.roamingthings.tracing.novelai.ports.driven.AuthorServiceClient
+import de.roamingthings.tracing.novelai.ports.driven.NovelLibraryClient
 import io.opentracing.Scope
 import io.opentracing.Span
 import io.opentracing.Tracer
@@ -23,6 +25,9 @@ class GenerateNovelServiceTest {
     @Mock
     lateinit var authorServiceClient: AuthorServiceClient
 
+    @Mock
+    lateinit var novelLibraryClient: NovelLibraryClient
+
     @InjectMocks
     lateinit var generateNovelService: GenerateNovelService
 
@@ -36,6 +41,8 @@ class GenerateNovelServiceTest {
         }
         doReturn(builderMock)
                 .`when`(tracer).buildSpan(any())
+        doReturn(spanMock)
+                .`when`(tracer).activeSpan()
 //        doReturn(scopeMock)
 //                .`when`(tracer).activateSpan(any())
     }
@@ -47,6 +54,12 @@ class GenerateNovelServiceTest {
         val novel = generateNovelService.generateNovel()
 
         assertThat(novel.content).isEqualTo(NOVEL_CONTENT)
+        verifyNovelStored()
+    }
+
+    private fun verifyNovelStored() {
+        verify(novelLibraryClient)
+                .storeNovel(any())
     }
 
     private fun authorServiceReturnsText() {

@@ -9,6 +9,11 @@
       "name": "novelai.author-service.base-uri",
       "type": "java.lang.String",
       "description": "Base URI for the author service."
+    },
+    {
+      "name": "novelai.novel-library-service.base-uri",
+      "type": "java.lang.String",
+      "description": "Base URI for the novel-library service."
     }
   ]
 }

@@ -1,14 +1,14 @@
 package de.roamingthings.tracing.novelai.domain
 
-import java.time.LocalDate
-import java.time.LocalDate.now
+import java.time.LocalDateTime.now
+import java.time.LocalDateTime
 import java.util.UUID
 import java.util.UUID.fromString
 import java.util.UUID.randomUUID
 
 data class Novel(
         val uuid: NovelUuid = NovelUuid(),
-        val created: LocalDate = now(),
+        val authored: LocalDateTime = now(),
         val title: String,
         val content: String)
 

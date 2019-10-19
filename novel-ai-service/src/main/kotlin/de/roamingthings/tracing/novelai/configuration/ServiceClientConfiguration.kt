@@ -9,10 +9,17 @@ import org.springframework.web.client.RestTemplate
 @Configuration
 class ServiceClientConfiguration(
     @Value("\${novelai.author-service.base-uri}")
-    private val authorServiceBaseUri: String
+    private val authorServiceBaseUri: String,
+    @Value("\${novelai.novel-library-service.base-uri}")
+    private val novelLibraryServiceBaseUri: String
 ) {
     @Bean
     fun authorServiceRestTemplate(builder: RestTemplateBuilder): RestTemplate {
         return builder.rootUri(authorServiceBaseUri).build()
+    }
+
+    @Bean
+    fun novelLibraryServiceRestTemplate(builder: RestTemplateBuilder): RestTemplate {
+        return builder.rootUri(novelLibraryServiceBaseUri).build()
     }
 }

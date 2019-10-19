@@ -4,3 +4,5 @@ opentracing:
 novelai:
   author-service:
     base-uri: http://localhost:10081
+  novel-library-service:
+    base-uri: http://localhost:10083
