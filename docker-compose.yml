@@ -8,6 +8,7 @@ services:
       - tracing
     ports:
       - 9080:8080
+      - 6005:5005
 
   author-service:
     image: author-service:latest
@@ -16,6 +17,7 @@ services:
       - tracing
     ports:
       - 9081:8080
+      - 6015:5005
 
   text-library-service:
     image: text-library-service:latest
@@ -25,6 +27,7 @@ services:
       - tracing
     ports:
       - 9082:8080
+      - 6025:5005
 
   novel-library-service:
     image: novel-library-service:latest
@@ -34,6 +37,7 @@ services:
       - tracing
     ports:
       - 9083:8080
+      - 6035:5005
 
   library_db:
     image: postgres:alpine
