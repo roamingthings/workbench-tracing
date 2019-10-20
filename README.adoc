@@ -2,6 +2,10 @@
 
 This projects allows to tinker with tracing by providing some services that report to a Jaeger tracing backend.
 
+== Setup document-generator-service
+
+In the `document-generator-service` folder copy the `.env.sample` file to `.env` and set values accordingly.
+
 == Configure Docker
 
 In order to calculate dependencies set the memory that is available for docker to at leas 2.5GiB.
@@ -28,3 +32,7 @@ document can be retrieved.
 === Manually store a novel
 
 `curl -v -X PUT -H "Content-Type: application/json" -d '{"authored": "2019-10-19T23:42:00Z", "title": "A title", "content": "A content"}' http://localhost:9083/novels/fcea267a-31df-472a-ae0e-8afda51d648d`
+
+=== Manually generate a document
+
+`curl -v -X POST -H "Content-Type: application/json" -d '{"title":"The title","content":"The content"}' http://localhost:9084/documents`

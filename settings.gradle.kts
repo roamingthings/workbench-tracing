@@ -4,6 +4,7 @@ include("authorService")
 include("novelAiService")
 include("textLibraryService")
 include("novelLibraryService")
+include("documentGeneratorService")
 
 val upperCaseLetters = "\\p{Upper}".toRegex()
 
