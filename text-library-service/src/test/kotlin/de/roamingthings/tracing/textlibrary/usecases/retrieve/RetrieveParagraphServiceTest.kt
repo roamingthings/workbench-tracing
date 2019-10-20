@@ -2,8 +2,8 @@ package de.roamingthings.tracing.textlibrary.usecases.retrieve
 
 import com.nhaarman.mockitokotlin2.doReturn
 import de.roamingthings.tracing.textlibrary.ports.driven.TextRepository
-import de.roamingthings.tracing.textlibrary.usecases.generate.PARAGRAPH
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks
@@ -27,8 +27,36 @@ class RetrieveParagraphServiceTest {
         assertThat(content).isEqualTo(PARAGRAPH)
     }
 
+    @Test
+    fun `should throw exception if null is retrieved`() {
+        repositoryDoesntFindText()
+
+        assertThatThrownBy {
+            retrieveParagraphService.retrieveParagraph()
+        }.isInstanceOf(NoTextFoundException::class.java)
+    }
+
+    @Test
+    fun `should throw exception if blank paragraph is retrieved`() {
+        repositoryFindsBlankParagraph()
+
+        assertThatThrownBy {
+            retrieveParagraphService.retrieveParagraph()
+        }.isInstanceOf(NoTextFoundException::class.java)
+    }
+
+    private fun repositoryFindsBlankParagraph() {
+        doReturn("")
+                .`when`(textRepository).loadRandomText()
+    }
+
     private fun repositoryFindsText() {
         doReturn(PARAGRAPH)
+                .`when`(textRepository).loadRandomText()
+    }
+
+    private fun repositoryDoesntFindText() {
+        doReturn(null)
                 .`when`(textRepository).loadRandomText()
     }
 }

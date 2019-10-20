@@ -13,6 +13,9 @@ class RetrieveParagraphService(private val textRepository: TextRepository) {
     fun retrieveParagraph(): String {
         log.info("Looking for some paragraph")
 
-        return textRepository.loadRandomText()
+        val paragraph = textRepository.loadRandomText()
+        return if (paragraph.isNullOrBlank()) throw NoTextFoundException() else paragraph
     }
 }
+
+class NoTextFoundException : RuntimeException()

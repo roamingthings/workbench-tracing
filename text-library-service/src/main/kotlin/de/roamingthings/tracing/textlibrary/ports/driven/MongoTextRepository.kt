@@ -17,7 +17,7 @@ class MongoTextRepository(
         private val log = LoggerFactory.getLogger(MongoTextRepository::class.java)
     }
 
-    override fun loadRandomText(): String {
+    override fun loadRandomText(): String? {
         val ordinal = randomNumberGenerator.nextInt(countTexts())
 
         log.info("Fetching text with ordinal $ordinal")
@@ -25,7 +25,7 @@ class MongoTextRepository(
         val query = queryForTextWithOrdinal(ordinal)
         val document = mongoTemplate.findOne(query, Document::class.java, "texts")
 
-        return if (document != null && document["text"] != null) document.getString("text") else ""
+        return document?.getString("text")
     }
 
     private fun queryForTextWithOrdinal(ordinal: Int) = Query().addCriteria(Criteria.where("ordinal").`is`(ordinal))
