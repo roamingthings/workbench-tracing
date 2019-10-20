@@ -2,6 +2,7 @@ package de.roamingthings.tracing.testing.mock
 
 import de.roamingthings.tracing.testing.mock.AuthorServiceMock.Companion.authorServiceMock
 import de.roamingthings.tracing.testing.mock.NovelLibraryServiceMock.Companion.novelLibraryServiceMock
+import de.roamingthings.tracing.testing.mock.TextLibraryServiceMock.Companion.textLibraryServiceMock
 import org.junit.jupiter.api.BeforeEach
 
 abstract class WireMockTestBase {
@@ -19,5 +20,7 @@ abstract class WireMockTestBase {
         authorServiceMock.reset()
         novelLibraryServiceMock.startIfNotRunning()
         novelLibraryServiceMock.reset()
+        textLibraryServiceMock.startIfNotRunning()
+        textLibraryServiceMock.reset()
     }
 }

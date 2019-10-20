@@ -14,6 +14,11 @@
       "name": "novelai.novel-library-service.base-uri",
       "type": "java.lang.String",
       "description": "Base URI for the novel-library service."
+    },
+    {
+      "name": "novelai.text-library-service.base-uri",
+      "type": "java.lang.String",
+      "description": "Base URI for the novel-library service."
     }
   ]
 }

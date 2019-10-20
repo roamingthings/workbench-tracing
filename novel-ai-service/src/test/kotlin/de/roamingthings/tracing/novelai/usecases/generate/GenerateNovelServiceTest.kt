@@ -6,16 +6,22 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import de.roamingthings.tracing.novelai.ports.driven.AuthorServiceClient
 import de.roamingthings.tracing.novelai.ports.driven.NovelLibraryClient
+import de.roamingthings.tracing.novelai.ports.driving.NOVEL_AUTHORED
+import de.roamingthings.tracing.novelai.ports.driving.NOVEL_TITLE
 import io.opentracing.Scope
 import io.opentracing.Span
 import io.opentracing.Tracer
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.SoftAssertions
+import org.assertj.core.api.SoftAssertions.assertSoftly
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
+import java.time.Clock.fixed
+import java.time.ZoneId.systemDefault
 
 @ExtendWith(MockitoExtension::class)
 class GenerateNovelServiceTest {
@@ -23,13 +29,27 @@ class GenerateNovelServiceTest {
     lateinit var tracer: Tracer;
 
     @Mock
+    lateinit var novelTitleService: NovelTitleService
+
+    @Mock
     lateinit var authorServiceClient: AuthorServiceClient
 
     @Mock
     lateinit var novelLibraryClient: NovelLibraryClient
 
-    @InjectMocks
+    val systemClock = fixed(NOVEL_AUTHORED.atZone(systemDefault()).toInstant(), systemDefault())
+
     lateinit var generateNovelService: GenerateNovelService
+
+    @BeforeEach
+    fun setup() {
+        generateNovelService = GenerateNovelService(
+                systemClock,
+                tracer,
+                authorServiceClient,
+                novelLibraryClient,
+                novelTitleService)
+    }
 
     @BeforeEach
     fun mockTracing() {
@@ -48,18 +68,28 @@ class GenerateNovelServiceTest {
     }
 
     @Test
-    fun `should retrieve novel text via AuthorServiceClient`() {
+    fun `should generate novel using SystemClock, NovelTitleService and AuthorServiceClient`() {
         authorServiceReturnsText()
+        novelTitleServiceReturnsText()
 
         val novel = generateNovelService.generateNovel()
 
-        assertThat(novel.content).isEqualTo(NOVEL_CONTENT)
+        assertSoftly { softly ->
+            softly.assertThat(novel.authored).isEqualTo(NOVEL_AUTHORED)
+            softly.assertThat(novel.title).isEqualTo(NOVEL_TITLE)
+            softly.assertThat(novel.content).isEqualTo(NOVEL_CONTENT)
+        }
         verifyNovelStored()
     }
 
     private fun verifyNovelStored() {
         verify(novelLibraryClient)
                 .storeNovel(any())
+    }
+
+    private fun novelTitleServiceReturnsText() {
+        doReturn(NOVEL_TITLE)
+                .`when`(novelTitleService).generateNovelTitle()
     }
 
     private fun authorServiceReturnsText() {

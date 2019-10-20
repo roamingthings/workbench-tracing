@@ -7,13 +7,16 @@ import de.roamingthings.tracing.novelai.ports.driven.NovelLibraryClient
 import io.opentracing.Tracer
 import org.slf4j.LoggerFactory.getLogger
 import org.springframework.stereotype.Service
+import java.time.Clock
 import java.time.LocalDateTime.now
 
 
 @Service
-class GenerateNovelService(private val tracer: Tracer,
+class GenerateNovelService(private val systemClock: Clock,
+                           private val tracer: Tracer,
                            private val authorServiceClient: AuthorServiceClient,
-                           private val novelLibraryClient: NovelLibraryClient) {
+                           private val novelLibraryClient: NovelLibraryClient,
+                           private val novelTitleService: NovelTitleService) {
     companion object {
         private val log = getLogger(GenerateNovelService::class.java)
     }
@@ -22,18 +25,43 @@ class GenerateNovelService(private val tracer: Tracer,
         val novelUuid = NovelUuid()
         log.info("Generating a novel {}", novelUuid)
 
+        val novel = generateNovelInSpanWithIdentifier(novelUuid)
+        storeNovelInSpan(novel)
+
+        return novel
+    }
+
+    private fun storeNovelInSpan(novel: Novel) {
 //        val span = tracer.buildSpan("generateNovelContent").start()
 //        tracer.activateSpan(span).use {
-        tracer.buildSpan("generateNovelContent").startActive(true).use { scope ->
+        tracer.buildSpan("store-novel").startActive(true).use { scope ->
+            novelLibraryClient.storeNovel(novel)
+        }
+    }
+
+    private fun generateNovelInSpanWithIdentifier(novelUuid: NovelUuid): Novel {
+        tracer.buildSpan("write-novel").startActive(true).use { scope ->
             tracer.activeSpan().setTag("NOVEL_ID", novelUuid.toString())
 
-            val content = authorServiceClient.generateNovelContent()
+            return generateNovelUsingIdentity(novelUuid)
+        }
+    }
 
-            val novel = Novel(novelUuid, now(), "A static novel", content)
+    private fun generateNovelUsingIdentity(novelUuid: NovelUuid): Novel {
+        val title = retrieveTitle()
+        val content = retrieveContent()
+        return Novel(novelUuid, now(systemClock), title, content)
+    }
 
-            novelLibraryClient.storeNovel(novel)
+    private fun retrieveTitle(): String {
+        tracer.buildSpan("write-novel-title").startActive(true).use { scope ->
+            return novelTitleService.generateNovelTitle()
+        }
+    }
 
-            return novel
+    private fun retrieveContent(): String {
+        tracer.buildSpan("write-novel-content").startActive(true).use { scope ->
+            return authorServiceClient.generateNovelContent()
         }
     }
 }

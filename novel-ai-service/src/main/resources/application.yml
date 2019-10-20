@@ -14,5 +14,10 @@ opentracing:
 novelai:
   author-service:
     base-uri: http://author-service:8080
+  text-library-service:
+    base-uri: http://text-library-service:8080
   novel-library-service:
     base-uri: http://novel-library-service:8080
+logging:
+  level:
+    de.roamingthings: DEBUG

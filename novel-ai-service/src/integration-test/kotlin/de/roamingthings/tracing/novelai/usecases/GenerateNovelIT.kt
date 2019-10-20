@@ -2,6 +2,7 @@ package de.roamingthings.tracing.novelai.usecases
 
 import de.roamingthings.tracing.testing.mock.AuthorServiceMock.Companion.authorServiceMock
 import de.roamingthings.tracing.testing.mock.NovelLibraryServiceMock.Companion.novelLibraryServiceMock
+import de.roamingthings.tracing.testing.mock.TextLibraryServiceMock.Companion.textLibraryServiceMock
 import de.roamingthings.tracing.testing.mock.WireMockTestBase
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -25,6 +26,7 @@ class GenerateNovelIT: WireMockTestBase() {
     fun `should generate document`() {
         authorServiceMock.serviceGeneratesContent()
         novelLibraryServiceMock.serviceStoresNovel()
+        textLibraryServiceMock.retrievesRandomParagraph()
 
         val performRequest = mockMvc.perform(post("/novels"))
 
