@@ -113,8 +113,9 @@ tasks.check { dependsOn(integrationTest) }
 docker {
     springBootApplication {
         baseImage.set("openjdk:11")
-        ports.set(listOf(8080))
+        ports.set(listOf(8080, 5005))
         tag.set("text-library-service:latest")
+        jvmArgs.set(listOf("-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"))
     }
 }
 
