@@ -1,6 +1,7 @@
 package de.roamingthings.tracing.testing.mock
 
 import de.roamingthings.tracing.testing.mock.AuthorServiceMock.Companion.authorServiceMock
+import de.roamingthings.tracing.testing.mock.DocumentGeneratorServiceMock.Companion.documentGeneratorServiceMock
 import de.roamingthings.tracing.testing.mock.NovelLibraryServiceMock.Companion.novelLibraryServiceMock
 import de.roamingthings.tracing.testing.mock.TextLibraryServiceMock.Companion.textLibraryServiceMock
 import org.junit.jupiter.api.BeforeEach
@@ -22,5 +23,7 @@ abstract class WireMockTestBase {
         novelLibraryServiceMock.reset()
         textLibraryServiceMock.startIfNotRunning()
         textLibraryServiceMock.reset()
+        documentGeneratorServiceMock.startIfNotRunning()
+        documentGeneratorServiceMock.reset()
     }
 }

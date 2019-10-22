@@ -12,3 +12,11 @@ const val NOVEL_TITLE = "A Test Novel"
 const val NOVEL_CONTENT = "This is a very short test novel."
 
 fun aNovel() = Novel(NOVEL_UUID, NOVEL_AUTHORED, NOVEL_TITLE, NOVEL_CONTENT)
+
+fun aNovelDocument() = """
+    = The Novel Title
+
+    The novel paragraph.
+
+    Another Paragraph.
+""".trimIndent()
