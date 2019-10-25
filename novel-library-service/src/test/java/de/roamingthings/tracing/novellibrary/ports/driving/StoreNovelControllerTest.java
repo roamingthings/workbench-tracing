@@ -21,7 +21,7 @@ class StoreNovelControllerTest {
     StoreNovelController storeNovelController;
 
     @Test
-    void should_call_service_to_store_novel() throws Exception {
+    void should_call_service_to_store_novel() {
         StoreNovelRequest request = aStoreNovelRequest();
 
         storeNovelController.storeNovel(NOVEL_UUID, request);
