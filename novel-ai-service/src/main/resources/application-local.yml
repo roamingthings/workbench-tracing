@@ -9,3 +9,5 @@ novelai:
     base-uri: http://localhost:9082
   novel-library-service:
     base-uri: http://localhost:9083
+  document-generator-service:
+    base-uri: http://localhost:9084

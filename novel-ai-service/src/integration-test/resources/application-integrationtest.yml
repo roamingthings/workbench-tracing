@@ -8,3 +8,5 @@ novelai:
     base-uri: http://localhost:10082
   novel-library-service:
     base-uri: http://localhost:10083
+  document-generator-service:
+    base-uri: http://localhost:10084

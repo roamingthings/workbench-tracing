@@ -18,6 +18,8 @@ novelai:
     base-uri: http://text-library-service:8080
   novel-library-service:
     base-uri: http://novel-library-service:8080
+  document-generator-service:
+    base-uri: http://document-generator-service:8080
 logging:
   level:
     de.roamingthings: DEBUG

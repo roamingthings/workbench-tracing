@@ -27,7 +27,6 @@ class GenerateNovelIT: WireMockTestBase() {
     lateinit var mockMvc: MockMvc
 
     @Test
-    @Disabled
     fun `should generate novel`() {
         authorServiceMock.serviceGeneratesContent()
         novelLibraryServiceMock.serviceStoresNovel()
@@ -58,6 +57,7 @@ class GenerateNovelIT: WireMockTestBase() {
                 The novel paragraph.
         
                 Another Paragraph.
+
             """.trimIndent()
         )
 

@@ -24,7 +24,7 @@ class DocumentGeneratorServiceMock : BaseWireMock(DOCUMENT_GENERATOR_SERVICE_MOC
     fun serviceGeneratesDocument() {
         wireMock.register(post(urlEqualTo("/documents"))
                 .withHeader("Accept", equalTo("text/asciidoc"))
-                .withRequestBody(equalToJson("{\n  \"title\": \"The Novel Title\",\n  \"content\": \"The novel paragraph.\\n\\nAnother Paragraph.\"\n}"))
+                .withRequestBody(equalToJson("{\n  \"authored\" : \"2019-10-19T23:42:00\",\n  \"title\" : \"The Novel Title\",\n  \"content\" : \"The novel paragraph.\\n\\nAnother Paragraph.\"\n}"))
                 .willReturn(aResponse()
                         .withStatus(SC_OK)
                         .withHeader("Content-Type", "text/asciidoc")

@@ -13,7 +13,9 @@ class ServiceClientConfiguration(
     @Value("\${novelai.novel-library-service.base-uri}")
     private val novelLibraryServiceBaseUri: String,
     @Value("\${novelai.text-library-service.base-uri}")
-    private val textLibraryServiceBaseUri: String
+    private val textLibraryServiceBaseUri: String,
+    @Value("\${novelai.document-generator-service.base-uri}")
+    private val documentGeneratorServiceBaseUri: String
 ) {
     @Bean
     fun authorServiceRestTemplate(builder: RestTemplateBuilder): RestTemplate {
@@ -28,5 +30,10 @@ class ServiceClientConfiguration(
     @Bean
     fun textLibraryServiceRestTemplate(builder: RestTemplateBuilder): RestTemplate {
         return builder.rootUri(textLibraryServiceBaseUri).build()
+    }
+
+    @Bean
+    fun documentGeneratorServiceRestTemplate(builder: RestTemplateBuilder): RestTemplate {
+        return builder.rootUri(documentGeneratorServiceBaseUri).build()
     }
 }
