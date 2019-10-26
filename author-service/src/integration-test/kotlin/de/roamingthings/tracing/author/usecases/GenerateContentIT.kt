@@ -8,6 +8,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT
 import org.springframework.http.MediaType.TEXT_PLAIN
+import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
@@ -15,6 +16,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @AutoConfigureMockMvc
+@ActiveProfiles("integrationtest")
 class GenerateContentIT: WireMockTestBase() {
     @Autowired
     lateinit var mockMvc: MockMvc
@@ -40,5 +42,14 @@ class GenerateContentIT: WireMockTestBase() {
                     
                     A random paragraph.
                 """.trimIndent()))
+    }
+
+    @Test
+    fun `should be a teapod`() {
+        val performRequest =
+                mockMvc.perform(post("/failing/contents")
+                        .accept(TEXT_PLAIN))
+
+        performRequest.andExpect(status().isIAmATeapot)
     }
 }
