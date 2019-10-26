@@ -1,19 +1,12 @@
 package de.roamingthings.tracing.novelai.usecases.document
 
-import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doReturn
-import com.nhaarman.mockitokotlin2.mock
 import de.roamingthings.tracing.novelai.ports.driven.DocumentGeneratorClient
 import de.roamingthings.tracing.novelai.ports.driven.GenerateDocumentSpecification
 import de.roamingthings.tracing.novelai.ports.driven.NovelLibraryClient
 import de.roamingthings.tracing.novelai.ports.driving.NOVEL_UUID
 import de.roamingthings.tracing.novelai.ports.driving.aNovel
-import io.opentracing.Scope
-import io.opentracing.Span
-import io.opentracing.Tracer
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.BeforeEach
-
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks
