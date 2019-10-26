@@ -1,19 +1,14 @@
 import com.bmuschko.gradle.docker.tasks.image.Dockerfile
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("org.springframework.boot") version "2.1.9.RELEASE"
-    id("io.spring.dependency-management") version "1.0.8.RELEASE"
+    id("de.roamingthings.kotlinspring")
     id("com.bmuschko.docker-spring-boot-application") version "5.2.0"
-    kotlin("jvm") version "1.3.50"
-    kotlin("plugin.spring") version "1.3.50"
     idea
 }
 
 group = "de.roamingthings.tracing"
 version = "0.0.1-SNAPSHOT"
-java.sourceCompatibility = JavaVersion.VERSION_11
 
 val developmentOnly by configurations.creating
 configurations {
@@ -44,38 +39,19 @@ val testIntegrationImplementation by configurations.getting {
 
 configurations["testIntegrationRuntimeOnly"].extendsFrom(configurations.runtimeOnly.get())
 
-val mockitoKotlinVersion: String by extra
+val jaegerCloudStarterVersion: String by project
+val jaegerClientVersion: String by project
 val wireMockVersion: String by extra
 dependencies {
-    implementation("org.springframework.boot:spring-boot-starter-actuator")
-    implementation("org.springframework.boot:spring-boot-starter-web")
-    implementation("io.opentracing.contrib:opentracing-spring-jaeger-cloud-starter:2.0.3")
-
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-
-    implementation("org.jetbrains.kotlin:kotlin-reflect")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    implementation("io.opentracing.contrib:opentracing-spring-jaeger-cloud-starter:$jaegerClientVersion")
+    // Due to compatibility issues with Spring Boot 2.2.0 include a newer version
+    implementation("io.opentracing.contrib:opentracing-spring-cloud-starter:$jaegerCloudStarterVersion")
 
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 
     developmentOnly("org.springframework.boot:spring-boot-devtools")
 
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("org.junit.jupiter:junit-jupiter")
-
-    testImplementation("org.assertj:assertj-core")
-    testImplementation("org.mockito:mockito-core")
-    testImplementation("org.mockito:mockito-junit-jupiter")
-    testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:$mockitoKotlinVersion")
-
     testIntegrationImplementation("com.github.tomakehurst:wiremock-standalone:$wireMockVersion")
-}
-
-tasks.withType<KotlinCompile> {
-    kotlinOptions {
-        freeCompilerArgs = listOf("-Xjsr305=strict")
-        jvmTarget = "1.8"
-    }
 }
 
 tasks.compileJava { dependsOn(tasks.processResources) }

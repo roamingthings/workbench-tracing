@@ -1,16 +1,13 @@
 import com.bmuschko.gradle.docker.tasks.image.Dockerfile
 
 plugins {
-    java
-    id("org.springframework.boot") version "2.1.9.RELEASE"
-    id("io.spring.dependency-management") version "1.0.8.RELEASE"
+    id("de.roamingthings.javaspring")
     id("com.bmuschko.docker-spring-boot-application") version "5.2.0"
     idea
 }
 
 group = "de.roamingthings.tracing"
 version = "0.0.1-SNAPSHOT"
-java.sourceCompatibility = JavaVersion.VERSION_11
 
 val developmentOnly by configurations.creating
 configurations {
@@ -38,29 +35,20 @@ val testIntegrationImplementation by configurations.getting {
 
 configurations["testIntegrationRuntimeOnly"].extendsFrom(configurations.runtimeOnly.get())
 
+val jaegerCloudStarterVersion: String by project
+val jaegerClientVersion: String by project
 dependencies {
-    implementation("org.springframework.boot:spring-boot-starter-actuator")
-    implementation("org.springframework.boot:spring-boot-starter-web")
-    implementation("io.opentracing.contrib:opentracing-spring-jaeger-cloud-starter:2.0.3")
+    implementation("io.opentracing.contrib:opentracing-spring-jaeger-cloud-starter:$jaegerClientVersion")
+    // Due to compatibility issues with Spring Boot 2.2.0 include a newer version
+    implementation("io.opentracing.contrib:opentracing-spring-cloud-starter:$jaegerCloudStarterVersion")
+
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.postgresql:postgresql")
 
     developmentOnly("org.springframework.boot:spring-boot-devtools")
 
     testImplementation("com.h2database:h2")
-
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("org.junit.jupiter:junit-jupiter")
-
-    testImplementation("org.assertj:assertj-core")
-    testImplementation("org.mockito:mockito-core")
-    testImplementation("org.mockito:mockito-junit-jupiter")
-
-    implementation("org.projectlombok:lombok")
-    annotationProcessor("org.projectlombok:lombok")
-    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 }
 
 tasks.compileJava { dependsOn(tasks.processResources) }
