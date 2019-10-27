@@ -10,6 +10,7 @@ import de.roamingthings.tracing.novelai.ports.driving.NOVEL_AUTHORED
 import de.roamingthings.tracing.novelai.ports.driving.NOVEL_TITLE
 import de.roamingthings.tracing.novelai.test.mockTracingLenientUsingMock
 import de.roamingthings.tracing.novelai.usecases.generate.AuthoringMethod.DEFAULT
+import de.roamingthings.tracing.novelai.usecases.generate.AuthoringMethod.FAILING
 import de.roamingthings.tracing.novelai.usecases.generate.AuthoringMethod.TEAPOD
 import io.opentracing.Tracer
 import org.assertj.core.api.Assertions
@@ -19,6 +20,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
+import org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR
 import org.springframework.http.HttpStatus.I_AM_A_TEAPOT
 import org.springframework.web.client.HttpClientErrorException
 import java.time.Clock.fixed
@@ -74,7 +76,7 @@ class GenerateNovelServiceTest {
 
     @Test
     fun `should throw HttpClientErrorException when using AuthorServiceClient with TEAPOD method`() {
-        authorServiceThrowsClientException()
+        authorServiceThrowsClientExceptionOnTeapodMethod()
         novelTitleServiceReturnsText()
 
         Assertions.assertThatThrownBy {
@@ -82,9 +84,24 @@ class GenerateNovelServiceTest {
         }.isInstanceOf(HttpClientErrorException::class.java)
     }
 
-    private fun authorServiceThrowsClientException() {
+    @Test
+    fun `should throw HttpClientErrorException when using AuthorServiceClient with FAILING method`() {
+        authorServiceThrowsClientExceptionOnFailingMethod()
+        novelTitleServiceReturnsText()
+
+        Assertions.assertThatThrownBy {
+            generateNovelService.generateNovel(FAILING)
+        }.isInstanceOf(HttpClientErrorException::class.java)
+    }
+
+    private fun authorServiceThrowsClientExceptionOnTeapodMethod() {
         doThrow(HttpClientErrorException(I_AM_A_TEAPOT) as Throwable)
                 .`when`(authorServiceClient).generateNovelContentTeapod()
+    }
+
+    private fun authorServiceThrowsClientExceptionOnFailingMethod() {
+        doThrow(HttpClientErrorException(INTERNAL_SERVER_ERROR) as Throwable)
+                .`when`(authorServiceClient).generateNovelContentFailing()
     }
 
     private fun verifyNovelStored() {

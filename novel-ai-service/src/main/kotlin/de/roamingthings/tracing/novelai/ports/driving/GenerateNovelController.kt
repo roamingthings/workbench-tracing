@@ -2,6 +2,7 @@ package de.roamingthings.tracing.novelai.ports.driving
 
 import de.roamingthings.tracing.novelai.usecases.generate.AuthoringMethod
 import de.roamingthings.tracing.novelai.usecases.generate.AuthoringMethod.DEFAULT
+import de.roamingthings.tracing.novelai.usecases.generate.AuthoringMethod.FAILING
 import de.roamingthings.tracing.novelai.usecases.generate.AuthoringMethod.TEAPOD
 import de.roamingthings.tracing.novelai.usecases.generate.GenerateNovelService
 import io.opentracing.Tracer
@@ -38,12 +39,13 @@ class GenerateNovelController(
     }
 
     private fun setAuthoringMethodTag(authoringMethod: AuthoringMethod) {
-        tracer.activeSpan().setTag("AUTHORING_METHOD", authoringMethod.toString())
+        tracer.activeSpan().setTag("authoring_method", authoringMethod.toString())
     }
 }
 
 fun toAuthoringMethod(param: String?): AuthoringMethod =
         when (param?.toLowerCase()) {
             "t" -> TEAPOD
+            "f" -> FAILING
             else -> DEFAULT
         }
