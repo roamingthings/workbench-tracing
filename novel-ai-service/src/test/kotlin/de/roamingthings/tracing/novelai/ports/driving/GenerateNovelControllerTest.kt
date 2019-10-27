@@ -8,6 +8,7 @@ import com.nhaarman.mockitokotlin2.verify
 import de.roamingthings.tracing.novelai.test.mockTracingLenientUsingMock
 import de.roamingthings.tracing.novelai.usecases.generate.AuthoringMethod.DEFAULT
 import de.roamingthings.tracing.novelai.usecases.generate.AuthoringMethod.FAILING
+import de.roamingthings.tracing.novelai.usecases.generate.AuthoringMethod.PARALLEL
 import de.roamingthings.tracing.novelai.usecases.generate.AuthoringMethod.TEAPOD
 import de.roamingthings.tracing.novelai.usecases.generate.GenerateNovelService
 import io.opentracing.Tracer
@@ -85,6 +86,16 @@ class GenerateNovelControllerTest {
 
         verify(generateNovelService)
                 .generateNovel(eq(FAILING))
+    }
+
+    @Test
+    fun `should pass method PARALLEL to service if method parameter 'p' given`() {
+        serviceReturnsNovel()
+
+        generateNovelController.generateNovel("p")
+
+        verify(generateNovelService)
+                .generateNovel(eq(PARALLEL))
     }
 
     private fun serviceThrowsClientException(httpStatus: HttpStatus) {

@@ -1,5 +1,5 @@
 package de.roamingthings.tracing.novelai.usecases.generate
 
 enum class AuthoringMethod {
-    DEFAULT, TEAPOD, FAILING
+    DEFAULT, TEAPOD, FAILING, PARALLEL
 }

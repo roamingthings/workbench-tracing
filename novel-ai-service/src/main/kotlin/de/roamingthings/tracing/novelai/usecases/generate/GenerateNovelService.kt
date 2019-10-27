@@ -6,6 +6,7 @@ import de.roamingthings.tracing.novelai.ports.driven.AuthorServiceClient
 import de.roamingthings.tracing.novelai.ports.driven.NovelLibraryClient
 import de.roamingthings.tracing.novelai.usecases.generate.AuthoringMethod.DEFAULT
 import de.roamingthings.tracing.novelai.usecases.generate.AuthoringMethod.FAILING
+import de.roamingthings.tracing.novelai.usecases.generate.AuthoringMethod.PARALLEL
 import de.roamingthings.tracing.novelai.usecases.generate.AuthoringMethod.TEAPOD
 import io.opentracing.Tracer
 import org.slf4j.LoggerFactory.getLogger
@@ -44,7 +45,7 @@ class GenerateNovelService(private val systemClock: Clock,
 
     private fun generateNovelInSpanWithIdentifier(novelUuid: NovelUuid, method: AuthoringMethod): Novel {
         tracer.buildSpan("write-novel").startActive(true).use { scope ->
-            tracer.activeSpan().setTag("NOVEL_ID", novelUuid.toString())
+            tracer.activeSpan().setTag("novel_id", novelUuid.toString())
 
             return generateNovelUsingIdentity(novelUuid, method)
         }
@@ -68,6 +69,7 @@ class GenerateNovelService(private val systemClock: Clock,
                     authorServiceClient.generateNovelContentFailing()
                     ""
                 }
+                PARALLEL -> authorServiceClient.generateNovelContentParallel()
             }
         }
     }

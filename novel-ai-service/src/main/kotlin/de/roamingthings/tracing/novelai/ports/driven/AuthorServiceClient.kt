@@ -15,14 +15,23 @@ class AuthorServiceClient(
     fun generateNovelContent(): String {
         log.info("Asking author for a new novel content")
 
-        val content = authorServiceRestTemplate.postForObject("/contents", null, String::class.java)
+        return generateNovelContentUsingUrl("/contents")
+    }
+
+    private fun generateNovelContentUsingUrl(serviceUrl: String): String {
+        val content = authorServiceRestTemplate.postForObject(serviceUrl, null, String::class.java)
         log.debug("Got novel content {}", content)
 
         if (content.isNullOrBlank()) {
             throw EmptyContentException()
         }
-
         return content
+    }
+
+    fun generateNovelContentParallel(): String {
+        log.info("Asking author for a new novel content in parallel")
+
+        return generateNovelContentUsingUrl("/parallel/contents")
     }
 
     fun generateNovelContentTeapod() {
