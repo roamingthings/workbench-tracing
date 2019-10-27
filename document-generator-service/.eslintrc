@@ -1,0 +1,46 @@
+{
+  "env": {
+    "es6": true,
+    "node": true,
+    "mocha": true
+  },
+  "extends": [
+    "plugin:@typescript-eslint/recommended",
+    "standard"
+  ],
+  "globals": {
+    "Atomics": "readonly",
+    "SharedArrayBuffer": "readonly"
+  },
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": 2018,
+    "sourceType": "module"
+  },
+  "plugins": [
+    "@typescript-eslint",
+    "mocha"
+  ],
+  "rules": {
+    // https://eslint.org/docs/rules/
+    "max-len": ["error", { "code": 120, "tabWidth": 2, "ignoreStrings": true, "ignoreTemplateLiterals": true, "ignoreComments": true }],
+    "semi": ["error", "always"],
+    "quotes": ["error", "single"],
+    "no-console": "error",
+    // https://github.com/benmosher/eslint-plugin-import
+    "import/no-mutable-exports": "off",
+    // https://github.com/typescript-eslint/typescript-eslint/tree/master/packages/eslint-plugin#supported-rules
+    // "@typescript-eslint/no-var-requires": "off"
+    "@typescript-eslint/interface-name-prefix": "off",
+    "@typescript-eslint/ban-ts-ignore": "warn",
+    // https://github.com/lo1tuma/eslint-plugin-mocha/tree/master/docs/rules
+    "mocha/no-exclusive-tests": "error"
+  },
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "extensions": [".js", ".ts"]
+      }
+    }
+  },
+}
