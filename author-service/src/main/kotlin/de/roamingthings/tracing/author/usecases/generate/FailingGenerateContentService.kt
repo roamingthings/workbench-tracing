@@ -12,8 +12,13 @@ class FailingGenerateContentService(private val tracer: Tracer) {
 
     fun generateNovelContent(): String {
         log.info("I don't want to work today")
-        tracer.buildSpan("retrieveParagraph").startActive(true).use { scope ->
-            throw LazyAuthorDoesNotWantToWorkException()
+        val span = tracer.buildSpan("retrieveParagraphs").start();
+        try {
+            tracer.activateSpan(span).use {
+                throw LazyAuthorDoesNotWantToWorkException()
+            }
+        } finally {
+            span.finish()
         }
     }
 }

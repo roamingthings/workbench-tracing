@@ -12,18 +12,18 @@ import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 
 @ExtendWith(MockitoExtension::class)
-class GenerateContentServiceTest {
+class ParallelGenerateContentServiceTest {
     @Mock
     lateinit var tracer: Tracer;
 
     @Mock
     lateinit var textLibraryServiceClient: TextLibraryServiceClient
 
-    lateinit var generateContentService: GenerateContentService
+    lateinit var parallelGenerateContentService: ParallelGenerateContentService
 
     @BeforeEach
     fun initService() {
-        generateContentService = GenerateContentService(tracer, textLibraryServiceClient, 5)
+        parallelGenerateContentService = ParallelGenerateContentService(tracer, textLibraryServiceClient, 5)
     }
 
     @BeforeEach
@@ -35,7 +35,7 @@ class GenerateContentServiceTest {
     fun `should retrieve paragraph from TextLibraryClient`() {
         textLibraryServiceReturnsText()
 
-        val content = generateContentService.generateNovelContent()
+        val content = parallelGenerateContentService.generateNovelContent()
 
         assertThat(content).isEqualTo("""
             A test paragraph.

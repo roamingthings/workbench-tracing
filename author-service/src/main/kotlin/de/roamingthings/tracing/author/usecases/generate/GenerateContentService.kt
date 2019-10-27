@@ -6,6 +6,8 @@ import io.opentracing.Tracer
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
+import java.util.stream.Collectors
+import java.util.stream.IntStream
 
 @Service
 class GenerateContentService(private val tracer: Tracer,
@@ -20,25 +22,19 @@ class GenerateContentService(private val tracer: Tracer,
         log.info("Generating a novel")
 
         val paragraphs = mutableListOf<String>()
-/*
-        val span = tracer.buildSpan("retrieveParagraph").start()
-        tracer.activateSpan(span).use {
-            for (index in 1..numParagraphs) {
-                textLibraryServiceClient.retrieveParagraph()?.let {
-                    paragraphs.add(it.trim())
+
+        val span = tracer.buildSpan("retrieveParagraphs").start();
+        try {
+            tracer.activateSpan(span).use {
+                for (index in 1..numParagraphs) {
+                    textLibraryServiceClient.retrieveParagraph()?.let {
+                        paragraphs.add(it.trim())
+                    }
                 }
             }
+            return paragraphs.joinToString("\n\n")
+        } finally {
+            span.finish()
         }
-*/
-
-        tracer.buildSpan("retrieveParagraph").startActive(true).use { scope ->
-            for (index in 1..numParagraphs) {
-                textLibraryServiceClient.retrieveParagraph()?.let {
-                    paragraphs.add(it.trim())
-                }
-            }
-        }
-
-        return paragraphs.joinToString("\n\n")
     }
 }
