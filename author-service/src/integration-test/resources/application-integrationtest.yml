@@ -2,5 +2,7 @@ opentracing:
   jaeger:
     enabled: false
 author:
+  content:
+    num-paragraphs: 5
   text-library-service:
     base-uri: http://localhost:10082

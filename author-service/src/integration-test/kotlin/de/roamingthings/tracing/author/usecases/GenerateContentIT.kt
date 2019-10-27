@@ -24,11 +24,34 @@ class GenerateContentIT : WireMockTestBase() {
     lateinit var mockMvc: MockMvc
 
     @Test
-    fun `should return a novel text`() {
+    fun `should return a novel text for default`() {
         textLibraryServiceMock.serviceGetsRandomParagraph()
 
         val performRequest =
                 mockMvc.perform(post("/contents")
+                        .accept(TEXT_PLAIN))
+
+        performRequest.andExpect(status().isOk)
+                .andExpect(content().contentTypeCompatibleWith(TEXT_PLAIN))
+                .andExpect(content().string("""
+                    A random paragraph.
+
+                    A random paragraph.
+                    
+                    A random paragraph.
+                    
+                    A random paragraph.
+                    
+                    A random paragraph.
+                """.trimIndent()))
+    }
+
+    @Test
+    fun `should return a novel text for parallel method`() {
+        textLibraryServiceMock.serviceGetsRandomParagraph()
+
+        val performRequest =
+                mockMvc.perform(post("/parallel/contents")
                         .accept(TEXT_PLAIN))
 
         performRequest.andExpect(status().isOk)

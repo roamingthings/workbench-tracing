@@ -13,7 +13,7 @@ opentracing:
       host: jaeger-agent
 author:
   content:
-    num-paragraphs: 5
+    num-paragraphs: 20
   text-library-service:
     base-uri: http://text-library-service:8080
 logging:
