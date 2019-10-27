@@ -1,7 +1,9 @@
 package de.roamingthings.tracing.author.usecases
 
+import de.roamingthings.tracing.author.usecases.generate.LazyAuthorDoesNotWantToWorkException
 import de.roamingthings.tracing.testing.mock.TextLibraryServiceMock.Companion.textLibraryServiceMock
 import de.roamingthings.tracing.testing.mock.WireMockTestBase
+import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
@@ -17,7 +19,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @AutoConfigureMockMvc
 @ActiveProfiles("integrationtest")
-class GenerateContentIT: WireMockTestBase() {
+class GenerateContentIT : WireMockTestBase() {
     @Autowired
     lateinit var mockMvc: MockMvc
 
@@ -51,5 +53,13 @@ class GenerateContentIT: WireMockTestBase() {
                         .accept(TEXT_PLAIN))
 
         performRequest.andExpect(status().isIAmATeapot)
+    }
+
+    @Test
+    fun `should respond with INTERNAL SERVER ERROR`() {
+        assertThatThrownBy {
+            mockMvc.perform(post("/failing/contents")
+                    .accept(TEXT_PLAIN))
+        }.hasCauseInstanceOf(LazyAuthorDoesNotWantToWorkException::class.java)
     }
 }
