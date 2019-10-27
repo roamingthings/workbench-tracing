@@ -4,13 +4,23 @@
 !includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/release/1-0/C4_Component.puml
 
 Person(user, "User")
-Container(novelAiService, “NovelAiService“, “Kotlin/Spring Boot”)
-Container(authorService, “AuthorService“, “Kotlin/Spring Boot”)
-Container(textLibraryService, "TextLibraryService", "Kotlin/Spring Boot")
-Container(documentGeneratorService, "DocumentGeneratorService", "TypeScript/Express")
-Container(novelLibraryService, "NovelLibraryService", "Java/Spring Boot")
-ContainerDb(postgres, "Library DB", "PostgreSQL")
-ContainerDb(mongo, "Texts DB", "MongoDB")
+System_Boundary(c1, "Novel AI Application") {
+    Container(novelAiService, “NovelAiService“, “Kotlin/Spring Boot”)
+    Container(authorService, “AuthorService“, “Kotlin/Spring Boot”)
+    Container(textLibraryService, "TextLibraryService", "Kotlin/Spring Boot")
+    Container(documentGeneratorService, "DocumentGeneratorService", "TypeScript/Express")
+    Container(novelLibraryService, "NovelLibraryService", "Java/Spring Boot")
+    ContainerDb(postgres, "Library DB", "PostgreSQL")
+    ContainerDb(mongo, "Texts DB", "MongoDB")
+}
+
+Person(devOps, "DevOps")
+System_Boundary(c2, "Jaeger Tracing") {
+    Container(jaegerAgent, “jaeger-agent“, "GO")
+    Container(jaegerCollector, “jaeger-collector“, "GO")
+    Container(jaegerQuery, “jaeger-query“, "GO")
+    ContainerDb(jaegerDb, "Jaeger DB", "Cassandra")
+}
 
 Rel(user, novelAiService, "Generate Novel")
 Rel(novelAiService, authorService, "Author Text")
@@ -21,4 +31,14 @@ Rel(textLibraryService, mongo, " ")
 Rel(novelAiService, textLibraryService, "Fetches title")
 Rel(novelLibraryService, postgres, " ")
 
+Rel(devOps, jaegerQuery, "Manages")
+Rel(jaegerAgent, jaegerCollector, "Sends events")
+Rel(jaegerCollector, jaegerDb, "Persists")
+Rel(jaegerQuery, jaegerDb, "Queries")
+
+Rel(novelAiService, jaegerAgent, "Sends events", "UDP")
+Rel(authorService, jaegerAgent, "Sends events", "UDP")
+Rel(textLibraryService, jaegerAgent, "Sends events", "UDP")
+Rel(documentGeneratorService, jaegerAgent, "Sends events", "UDP")
+Rel(novelLibraryService, jaegerAgent, "Sends events", "UDP")
 @enduml
