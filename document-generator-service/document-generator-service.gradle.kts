@@ -23,8 +23,10 @@ tasks {
 
 tasks["npm_run_build"].dependsOn("npm_i")
 
+tasks["npm_run_test"].dependsOn("npm_run_build")
+
 tasks.create("dockerBuildImage", DockerBuildImage::class) {
-    dependsOn("npm_run_build")
+    dependsOn("npm_run_test")
     inputDir.set(file(projectDir))
     tags.add("document-generator-service:latest")
 }
