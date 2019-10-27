@@ -5,6 +5,7 @@ import de.roamingthings.tracing.novelai.domain.NovelUuid
 import de.roamingthings.tracing.novelai.ports.driven.AuthorServiceClient
 import de.roamingthings.tracing.novelai.ports.driven.NovelLibraryClient
 import de.roamingthings.tracing.novelai.usecases.generate.AuthoringMethod.DEFAULT
+import de.roamingthings.tracing.novelai.usecases.generate.AuthoringMethod.FAILING
 import de.roamingthings.tracing.novelai.usecases.generate.AuthoringMethod.TEAPOD
 import io.opentracing.Tracer
 import org.slf4j.LoggerFactory.getLogger
@@ -61,6 +62,10 @@ class GenerateNovelService(private val systemClock: Clock,
                 DEFAULT -> authorServiceClient.generateNovelContent()
                 TEAPOD -> {
                     authorServiceClient.generateNovelContentTeapod()
+                    ""
+                }
+                FAILING -> {
+                    authorServiceClient.generateNovelContentFailing()
                     ""
                 }
             }

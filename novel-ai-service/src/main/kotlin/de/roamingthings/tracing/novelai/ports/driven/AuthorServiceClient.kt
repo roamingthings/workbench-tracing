@@ -18,7 +18,7 @@ class AuthorServiceClient(
         val content = authorServiceRestTemplate.postForObject("/contents", null, String::class.java)
         log.debug("Got novel content {}", content)
 
-        if (content == null) {
+        if (content.isNullOrBlank()) {
             throw EmptyContentException()
         }
 
@@ -29,5 +29,11 @@ class AuthorServiceClient(
         log.info("Asking author for a new novel content using teapod method")
 
         authorServiceRestTemplate.postForObject("/teapod/contents", null, String::class.java)
+    }
+
+    fun generateNovelContentFailing() {
+        log.info("Asking author for a new novel content using failing method")
+
+        authorServiceRestTemplate.postForObject("/failing/contents", null, String::class.java)
     }
 }
