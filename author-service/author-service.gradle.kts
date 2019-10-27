@@ -41,7 +41,7 @@ configurations["testIntegrationRuntimeOnly"].extendsFrom(configurations.runtimeO
 
 val jaegerCloudStarterVersion: String by project
 val jaegerClientVersion: String by project
-val wireMockVersion: String by extra
+val wireMockVersion: String by project
 dependencies {
     implementation("io.opentracing.contrib:opentracing-spring-jaeger-cloud-starter:$jaegerClientVersion")
     // Due to compatibility issues with Spring Boot 2.2.0 include a newer version
