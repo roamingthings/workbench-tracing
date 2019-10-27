@@ -71,6 +71,28 @@ $ curl -v "http://localhost:9080/novels/e41f24d3-a969-4325-b566-b0dbc4427086"
 (18) Nam liber tempor cum soluta nobis eleifend option congue nihil...
 ```
 
+By adding a query-parameter `m` you can chose between different methods of the authoring service.
+
+For example the author service will do parallel calls to the _text-library_ service, when a novel
+is created using `curl -v -X POST "http://localhost:9080/novels?m=p"`.
+
+|===
+| Value of query-paramter `m` | Result
+
+| <none> or unknown value
+| The _author_ will do sequential calls to the _text-library_
+
+| p
+| The _author_ will do parallel calls to the _text-library_
+
+| f
+| The _author_ will always fail with an internal exception.
+
+| t
+| The _author_ will always respond with `I AM A TEAPOD`.
+
+|===
+
 == Architecture
 The full system is build from the following services:
 
