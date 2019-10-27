@@ -24,4 +24,10 @@ class AuthorServiceClient(
 
         return content
     }
+
+    fun generateNovelContentTeapod() {
+        log.info("Asking author for a new novel content using teapod method")
+
+        authorServiceRestTemplate.postForObject("/teapod/contents", null, String::class.java)
+    }
 }
