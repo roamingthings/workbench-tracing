@@ -30,6 +30,16 @@ internal class AuthorServiceClientTest {
     }
 
     @Test
+    fun `should return body of response for parallel service`() {
+        parallelServiceReturnsContentBody(NOVEL_CONTENT)
+
+        val content = authorServiceClient.generateNovelContentParallel()
+
+        assertThat(content)
+                .isEqualTo(NOVEL_CONTENT)
+    }
+
+    @Test
     fun `should throw EmptyContentException if response for default service responds with empty body`() {
         serviceReturnsContentBody("")
 
@@ -50,5 +60,10 @@ internal class AuthorServiceClientTest {
     private fun serviceReturnsContentBody(body: String?) {
         doReturn(body)
                 .`when`(authorServiceRestTemplate).postForObject("/contents", null, String::class.java)
+    }
+
+    private fun parallelServiceReturnsContentBody(body: String?) {
+        doReturn(body)
+                .`when`(authorServiceRestTemplate).postForObject("/parallel/contents", null, String::class.java)
     }
 }

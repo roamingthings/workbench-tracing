@@ -3,6 +3,7 @@ package de.roamingthings.tracing.novelai.ports.driving
 import de.roamingthings.tracing.novelai.usecases.generate.AuthoringMethod
 import de.roamingthings.tracing.novelai.usecases.generate.AuthoringMethod.DEFAULT
 import de.roamingthings.tracing.novelai.usecases.generate.AuthoringMethod.FAILING
+import de.roamingthings.tracing.novelai.usecases.generate.AuthoringMethod.PARALLEL
 import de.roamingthings.tracing.novelai.usecases.generate.AuthoringMethod.TEAPOD
 import de.roamingthings.tracing.novelai.usecases.generate.GenerateNovelService
 import io.opentracing.Tracer
@@ -47,5 +48,6 @@ fun toAuthoringMethod(param: String?): AuthoringMethod =
         when (param?.toLowerCase()) {
             "t" -> TEAPOD
             "f" -> FAILING
+            "p" -> PARALLEL
             else -> DEFAULT
         }
