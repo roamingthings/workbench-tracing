@@ -1,10 +1,13 @@
 package de.roamingthings.tracing.author.ports.driving
 
 import com.nhaarman.mockitokotlin2.doReturn
+import de.roamingthings.tracing.novelai.test.mockTracingLenientUsingMock
 import de.roamingthings.tracing.textlibrary.ports.driving.PARAGRAPH
 import de.roamingthings.tracing.textlibrary.ports.driving.RetrieveParagraphController
 import de.roamingthings.tracing.textlibrary.usecases.retrieve.RetrieveParagraphService
+import io.opentracing.Tracer
 import org.assertj.core.api.SoftAssertions
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks
@@ -15,10 +18,18 @@ import org.springframework.http.HttpStatus.OK
 @ExtendWith(MockitoExtension::class)
 class RetrieveParagraphControllerTest {
     @Mock
+    lateinit var tracer: Tracer;
+
+    @Mock
     lateinit var retrieveParagraphService: RetrieveParagraphService
 
     @InjectMocks
     lateinit var retrieveParagraphController: RetrieveParagraphController
+
+    @BeforeEach
+    fun mockTracing() {
+        mockTracingLenientUsingMock(tracer)
+    }
 
     @Test
     fun `should return response with paragraph as plain text`() {

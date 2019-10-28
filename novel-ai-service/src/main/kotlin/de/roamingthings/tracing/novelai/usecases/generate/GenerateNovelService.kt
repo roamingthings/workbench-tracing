@@ -36,18 +36,27 @@ class GenerateNovelService(private val systemClock: Clock,
     }
 
     private fun storeNovelInSpan(novel: Novel) {
-//        val span = tracer.buildSpan("generateNovelContent").start()
-//        tracer.activateSpan(span).use {
-        tracer.buildSpan("store-novel").startActive(true).use { scope ->
-            novelLibraryClient.storeNovel(novel)
+        val span = tracer.buildSpan("store-novel").start()
+        tracer.activateSpan(span).use {
+            try {
+                novelLibraryClient.storeNovel(novel)
+            } finally {
+                span.finish()
+            }
         }
     }
 
     private fun generateNovelInSpanWithIdentifier(novelUuid: NovelUuid, method: AuthoringMethod): Novel {
-        tracer.buildSpan("write-novel").startActive(true).use { scope ->
-            tracer.activeSpan().setTag("novel_id", novelUuid.toString())
+        val span = tracer.buildSpan("write-novel").start()
+        tracer.activateSpan(span).use {
+            try {
+                tracer.activeSpan().setTag("novel_id", novelUuid.toString())
+                tracer.activeSpan().setBaggageItem("novel_id", novelUuid.toString())
 
-            return generateNovelUsingIdentity(novelUuid, method)
+                return generateNovelUsingIdentity(novelUuid, method)
+            } finally {
+                span.finish()
+            }
         }
     }
 
@@ -58,25 +67,35 @@ class GenerateNovelService(private val systemClock: Clock,
     }
 
     private fun retrieveContentUsingMethod(method: AuthoringMethod): String {
-        return tracer.buildSpan("write-novel-retrieve-content").startActive(true).use { scope ->
-            when (method) {
-                DEFAULT -> authorServiceClient.generateNovelContent()
-                TEAPOD -> {
-                    authorServiceClient.generateNovelContentTeapod()
-                    ""
+        val span = tracer.buildSpan("write-novel-retrieve-content").start()
+        tracer.activateSpan(span).use {
+            try {
+                return when (method) {
+                    DEFAULT -> authorServiceClient.generateNovelContent()
+                    TEAPOD -> {
+                        authorServiceClient.generateNovelContentTeapod()
+                        ""
+                    }
+                    FAILING -> {
+                        authorServiceClient.generateNovelContentFailing()
+                        ""
+                    }
+                    PARALLEL -> authorServiceClient.generateNovelContentParallel()
                 }
-                FAILING -> {
-                    authorServiceClient.generateNovelContentFailing()
-                    ""
-                }
-                PARALLEL -> authorServiceClient.generateNovelContentParallel()
+            } finally {
+                span.finish()
             }
         }
     }
 
     private fun retrieveTitle(): String {
-        tracer.buildSpan("write-novel-title").startActive(true).use { scope ->
-            return novelTitleService.generateNovelTitle()
+        val span = tracer.buildSpan("write-novel-title").start()
+        tracer.activateSpan(span).use {
+            try {
+                return novelTitleService.generateNovelTitle()
+            } finally {
+                span.finish()
+            }
         }
     }
 }
