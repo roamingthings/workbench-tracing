@@ -32,10 +32,10 @@ class ParallelGenerateContentServiceTest {
     }
 
     @Test
-    fun `should retrieve paragraph from TextLibraryClient`() {
+    fun `should retrieve paragraph from TextLibraryClient with default number of paragraphs`() {
         textLibraryServiceReturnsText()
 
-        val content = parallelGenerateContentService.generateNovelContent()
+        val content = parallelGenerateContentService.generateNovelContent(null)
 
         assertThat(content).isEqualTo("""
             A test paragraph.
@@ -44,6 +44,20 @@ class ParallelGenerateContentServiceTest {
             
             A test paragraph.
             
+            A test paragraph.
+            
+            A test paragraph.
+        """.trimIndent())
+    }
+
+    @Test
+    fun `should retrieve paragraph from TextLibraryClient with provided number of paragraphs`() {
+        textLibraryServiceReturnsText()
+        val numParagraphs = 2
+
+        val content = parallelGenerateContentService.generateNovelContent(numParagraphs)
+
+        assertThat(content).isEqualTo("""
             A test paragraph.
             
             A test paragraph.
