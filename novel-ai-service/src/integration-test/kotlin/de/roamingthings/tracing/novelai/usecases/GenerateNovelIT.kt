@@ -6,7 +6,6 @@ import de.roamingthings.tracing.testing.mock.NovelLibraryServiceMock.Companion.n
 import de.roamingthings.tracing.testing.mock.TextLibraryServiceMock.Companion.textLibraryServiceMock
 import de.roamingthings.tracing.testing.mock.WireMockTestBase
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
@@ -60,6 +59,41 @@ class GenerateNovelIT: WireMockTestBase() {
 
             """.trimIndent()
         )
+    }
 
+    @Test
+    fun `should generate novel with number of paragraphs`() {
+        authorServiceMock.serviceGeneratesContentWithNumParagraphs()
+        novelLibraryServiceMock.serviceStoresNovel()
+        novelLibraryServiceMock.serviceRetrievesNovel()
+        textLibraryServiceMock.retrievesRandomParagraph()
+        documentGeneratorServiceMock.serviceGeneratesDocument()
+
+        val performCreateNovel = mockMvc.perform(post("/novels?p={numParagraphs}", 42))
+
+        val location = performCreateNovel
+                .andExpect(status().isCreated)
+                .andReturn()
+                .response.getHeader("Location")
+
+        assertThat(location).isNotNull()
+
+        val performCreateDocument = mockMvc.perform(get(location!!))
+
+        val document = performCreateDocument
+                .andExpect(status().isOk)
+                .andExpect(content().contentTypeCompatibleWith("text/asciidoc"))
+                .andReturn()
+                .response.contentAsString
+
+        assertThat(document).isEqualTo("""
+                = The Novel Title
+        
+                The novel paragraph.
+        
+                Another Paragraph.
+
+            """.trimIndent()
+        )
     }
 }

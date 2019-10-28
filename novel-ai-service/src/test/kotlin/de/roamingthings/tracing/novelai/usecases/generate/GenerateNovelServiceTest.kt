@@ -1,6 +1,7 @@
 package de.roamingthings.tracing.novelai.usecases.generate
 
 import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.doThrow
 import com.nhaarman.mockitokotlin2.verify
@@ -65,7 +66,7 @@ class GenerateNovelServiceTest {
         authorServiceReturnsText()
         novelTitleServiceReturnsText()
 
-        val novel = generateNovelService.generateNovel(DEFAULT)
+        val novel = generateNovelService.generateNovel(DEFAULT, null)
 
         assertSoftly { softly ->
             softly.assertThat(novel.authored).isEqualTo(NOVEL_AUTHORED)
@@ -80,7 +81,7 @@ class GenerateNovelServiceTest {
         authorServiceParallelMethodReturnsText()
         novelTitleServiceReturnsText()
 
-        val novel = generateNovelService.generateNovel(PARALLEL)
+        val novel = generateNovelService.generateNovel(PARALLEL, null)
 
         assertSoftly { softly ->
             softly.assertThat(novel.authored).isEqualTo(NOVEL_AUTHORED)
@@ -96,7 +97,7 @@ class GenerateNovelServiceTest {
         novelTitleServiceReturnsText()
 
         Assertions.assertThatThrownBy {
-            generateNovelService.generateNovel(TEAPOD)
+            generateNovelService.generateNovel(TEAPOD, null)
         }.isInstanceOf(HttpClientErrorException::class.java)
     }
 
@@ -106,8 +107,32 @@ class GenerateNovelServiceTest {
         novelTitleServiceReturnsText()
 
         Assertions.assertThatThrownBy {
-            generateNovelService.generateNovel(FAILING)
+            generateNovelService.generateNovel(FAILING, null)
         }.isInstanceOf(HttpClientErrorException::class.java)
+    }
+
+    @Test
+    fun `should pass number of paragraphs to AuthorServiceClient with default method`() {
+        authorServiceReturnsText()
+        novelTitleServiceReturnsText()
+        val numParagraphs = 42
+
+        val novel = generateNovelService.generateNovel(DEFAULT, numParagraphs)
+
+        verify(authorServiceClient)
+                .generateNovelContent(42)
+    }
+
+    @Test
+    fun `should pass number of paragraphs to AuthorServiceClient with parallel method`() {
+        authorServiceParallelMethodReturnsText()
+        novelTitleServiceReturnsText()
+        val numParagraphs = 42
+
+        val novel = generateNovelService.generateNovel(PARALLEL, numParagraphs)
+
+        verify(authorServiceClient)
+                .generateNovelContentParallel(42)
     }
 
     private fun authorServiceThrowsClientExceptionOnTeapodMethod() {
@@ -132,11 +157,11 @@ class GenerateNovelServiceTest {
 
     private fun authorServiceReturnsText() {
         doReturn(NOVEL_CONTENT)
-                .`when`(authorServiceClient).generateNovelContent()
+                .`when`(authorServiceClient).generateNovelContent(anyOrNull())
     }
 
     private fun authorServiceParallelMethodReturnsText() {
         doReturn(NOVEL_CONTENT)
-                .`when`(authorServiceClient).generateNovelContentParallel()
+                .`when`(authorServiceClient).generateNovelContentParallel(anyOrNull())
     }
 }

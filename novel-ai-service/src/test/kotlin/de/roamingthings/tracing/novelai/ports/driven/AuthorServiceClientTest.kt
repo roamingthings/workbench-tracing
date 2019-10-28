@@ -23,7 +23,17 @@ internal class AuthorServiceClientTest {
     fun `should return body of response for default service`() {
         serviceReturnsContentBody(NOVEL_CONTENT)
 
-        val content = authorServiceClient.generateNovelContent()
+        val content = authorServiceClient.generateNovelContent(null)
+
+        assertThat(content)
+                .isEqualTo(NOVEL_CONTENT)
+    }
+
+    @Test
+    fun `should return body of response for default service with num paragraphs`() {
+        serviceReturnsContentBodyWithOptions(NOVEL_CONTENT)
+
+        val content = authorServiceClient.generateNovelContent(42)
 
         assertThat(content)
                 .isEqualTo(NOVEL_CONTENT)
@@ -33,7 +43,17 @@ internal class AuthorServiceClientTest {
     fun `should return body of response for parallel service`() {
         parallelServiceReturnsContentBody(NOVEL_CONTENT)
 
-        val content = authorServiceClient.generateNovelContentParallel()
+        val content = authorServiceClient.generateNovelContentParallel(null)
+
+        assertThat(content)
+                .isEqualTo(NOVEL_CONTENT)
+    }
+
+    @Test
+    fun `should return body of response for parallel service with num paragraphs`() {
+        parallelServiceReturnsContentBodyWithOptions(NOVEL_CONTENT)
+
+        val content = authorServiceClient.generateNovelContentParallel(42)
 
         assertThat(content)
                 .isEqualTo(NOVEL_CONTENT)
@@ -44,7 +64,7 @@ internal class AuthorServiceClientTest {
         serviceReturnsContentBody("")
 
         assertThatThrownBy {
-            authorServiceClient.generateNovelContent()
+            authorServiceClient.generateNovelContent(null)
         }.isInstanceOf(EmptyContentException::class.java)
     }
 
@@ -53,7 +73,7 @@ internal class AuthorServiceClientTest {
         serviceReturnsContentBody(null)
 
         assertThatThrownBy {
-            authorServiceClient.generateNovelContent()
+            authorServiceClient.generateNovelContent(null)
         }.isInstanceOf(EmptyContentException::class.java)
     }
 
@@ -65,5 +85,15 @@ internal class AuthorServiceClientTest {
     private fun parallelServiceReturnsContentBody(body: String?) {
         doReturn(body)
                 .`when`(authorServiceRestTemplate).postForObject("/parallel/contents", null, String::class.java)
+    }
+
+    private fun serviceReturnsContentBodyWithOptions(body: String?) {
+        doReturn(body)
+                .`when`(authorServiceRestTemplate).postForObject("/contents?p={numParagraphs}", null, String::class.java, 42)
+    }
+
+    private fun parallelServiceReturnsContentBodyWithOptions(body: String?) {
+        doReturn(body)
+                .`when`(authorServiceRestTemplate).postForObject("/parallel/contents?p={numParagraphs}", null, String::class.java, 42)
     }
 }
