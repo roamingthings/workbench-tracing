@@ -35,7 +35,6 @@ The UI of Jaeger is available at: http://localhost:16686/search
  The `Location` header of the response will contain the URI where the generated
 document can be retrieved.
 
-
 ```
 $ curl -v -X POST "http://localhost:9080/novels"
 
@@ -118,6 +117,16 @@ resource consuming, depending on the amount of traces that are stored in the dat
 text_db-seed:: This container is started when the application starts and initializes the text-library database.
 
 image::doc/services.png[]
+
+== Updating trace dependencies
+
+Dependencies are not calculated automatically. Instead a task has to triggered manually. There is a dedicated container,
+that is responsible for that. It will exit after the task is done.
+
+To start the container the following command can be used:
+```
+$ docker-compose up jaeger-spark-dependencies
+```
 
 == Debugging
 
