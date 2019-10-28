@@ -1,6 +1,8 @@
 package de.roamingthings.tracing.author.ports.driving
 
+import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.doReturn
+import com.nhaarman.mockitokotlin2.verify
 import de.roamingthings.tracing.author.usecases.generate.GenerateContentService
 import org.assertj.core.api.SoftAssertions
 import org.junit.jupiter.api.Test
@@ -22,7 +24,7 @@ class GenerateContentControllerTest {
     fun `should return response with content as plain text`() {
         serviceReturnsContent()
 
-        val response = generateContentController.generateContent()
+        val response = generateContentController.generateContent(null)
 
         SoftAssertions.assertSoftly {softly ->
             softly.assertThat(response.statusCode).isEqualTo(OK)
@@ -30,8 +32,19 @@ class GenerateContentControllerTest {
         }
     }
 
+    @Test
+    fun `should pass number of paragraphs from parameter 'p'`() {
+        serviceReturnsContent()
+        val numParagraphs = 42
+
+        generateContentController.generateContent(numParagraphs)
+
+        verify(generateContentService)
+                .generateNovelContent(42)
+    }
+
     private fun serviceReturnsContent() {
         doReturn(NOVEL_CONTENT)
-                .`when`(generateContentService).generateNovelContent()
+                .`when`(generateContentService).generateNovelContent(anyOrNull())
     }
 }
