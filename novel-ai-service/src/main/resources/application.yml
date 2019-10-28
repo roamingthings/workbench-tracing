@@ -23,3 +23,7 @@ novelai:
 logging:
   level:
     de.roamingthings: DEBUG
+management:
+  endpoint:
+    health:
+      show-components: always
