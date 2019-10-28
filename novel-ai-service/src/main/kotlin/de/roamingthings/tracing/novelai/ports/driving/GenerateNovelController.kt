@@ -25,14 +25,15 @@ class GenerateNovelController(
 
     @PostMapping("/novels")
     fun generateNovel(
-            @RequestParam(name = "m", required = false) method: String?
+            @RequestParam(name = "m", required = false) method: String?,
+            @RequestParam(name = "p", required = false) numParagraphs: Int?
     ): ResponseEntity<Void> {
         val authoringMethod = toAuthoringMethod(method)
 
         log.info("Generating new novel using method $authoringMethod")
         setAuthoringMethodTag(authoringMethod)
 
-        val novel = generateNovelService.generateNovel(authoringMethod)
+        val novel = generateNovelService.generateNovel(authoringMethod, numParagraphs)
         val novelId = novel.uuid
 
         log.debug("Generated a novel with id $novelId")

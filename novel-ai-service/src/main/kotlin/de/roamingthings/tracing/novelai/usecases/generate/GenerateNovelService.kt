@@ -25,11 +25,11 @@ class GenerateNovelService(private val systemClock: Clock,
         private val log = getLogger(GenerateNovelService::class.java)
     }
 
-    fun generateNovel(method: AuthoringMethod): Novel {
+    fun generateNovel(method: AuthoringMethod, numParagraphs: Int?): Novel {
         val novelUuid = NovelUuid()
         log.info("Generating a novel {}", novelUuid)
 
-        val novel = generateNovelInSpanWithIdentifier(novelUuid, method)
+        val novel = generateNovelInSpanWithIdentifier(novelUuid, method, numParagraphs)
         storeNovelInSpan(novel)
 
         return novel
@@ -46,32 +46,32 @@ class GenerateNovelService(private val systemClock: Clock,
         }
     }
 
-    private fun generateNovelInSpanWithIdentifier(novelUuid: NovelUuid, method: AuthoringMethod): Novel {
+    private fun generateNovelInSpanWithIdentifier(novelUuid: NovelUuid, method: AuthoringMethod, numParagraphs: Int?): Novel {
         val span = tracer.buildSpan("write-novel").start()
         tracer.activateSpan(span).use {
             try {
                 tracer.activeSpan().setTag("novel_id", novelUuid.toString())
                 tracer.activeSpan().setBaggageItem("novel_id", novelUuid.toString())
 
-                return generateNovelUsingIdentity(novelUuid, method)
+                return generateNovelUsingIdentity(novelUuid, method, numParagraphs)
             } finally {
                 span.finish()
             }
         }
     }
 
-    private fun generateNovelUsingIdentity(novelUuid: NovelUuid, method: AuthoringMethod): Novel {
+    private fun generateNovelUsingIdentity(novelUuid: NovelUuid, method: AuthoringMethod, numParagraphs: Int?): Novel {
         val title = retrieveTitle()
-        val content = retrieveContentUsingMethod(method)
+        val content = retrieveContentUsingMethod(method, numParagraphs)
         return Novel(novelUuid, now(systemClock), title, content)
     }
 
-    private fun retrieveContentUsingMethod(method: AuthoringMethod): String {
+    private fun retrieveContentUsingMethod(method: AuthoringMethod, numParagraphs: Int?): String {
         val span = tracer.buildSpan("write-novel-retrieve-content").start()
         tracer.activateSpan(span).use {
             try {
                 return when (method) {
-                    DEFAULT -> authorServiceClient.generateNovelContent()
+                    DEFAULT -> authorServiceClient.generateNovelContent(numParagraphs)
                     TEAPOD -> {
                         authorServiceClient.generateNovelContentTeapod()
                         ""
@@ -80,7 +80,7 @@ class GenerateNovelService(private val systemClock: Clock,
                         authorServiceClient.generateNovelContentFailing()
                         ""
                     }
-                    PARALLEL -> authorServiceClient.generateNovelContentParallel()
+                    PARALLEL -> authorServiceClient.generateNovelContentParallel(numParagraphs)
                 }
             } finally {
                 span.finish()

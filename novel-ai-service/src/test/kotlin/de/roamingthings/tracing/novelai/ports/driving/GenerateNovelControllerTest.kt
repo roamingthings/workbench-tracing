@@ -1,6 +1,7 @@
 package de.roamingthings.tracing.novelai.ports.driving
 
 import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.doThrow
 import com.nhaarman.mockitokotlin2.eq
@@ -46,22 +47,22 @@ class GenerateNovelControllerTest {
     fun `should return location with generated novel`() {
         serviceReturnsNovel()
 
-        val response = generateNovelController.generateNovel(null)
+        val response = generateNovelController.generateNovel(null, null)
 
         assertThat(response.statusCode).isEqualTo(CREATED)
         assertThat(response.headers["Location"]).containsExactly("/novels/${NOVEL_UUID}")
         verify(generateNovelService)
-                .generateNovel(eq(DEFAULT))
+                .generateNovel(DEFAULT, null)
     }
 
     @Test
     fun `should pass method DEFAULT to service if no request parameter given`() {
         serviceReturnsNovel()
 
-        generateNovelController.generateNovel(null)
+        generateNovelController.generateNovel(null, null)
 
         verify(generateNovelService)
-                .generateNovel(eq(DEFAULT))
+                .generateNovel(DEFAULT, null)
     }
 
     @Test
@@ -69,11 +70,11 @@ class GenerateNovelControllerTest {
         serviceThrowsClientException(I_AM_A_TEAPOT)
 
         assertThatThrownBy {
-            generateNovelController.generateNovel("t")
+            generateNovelController.generateNovel("t", null)
         }.isInstanceOf(HttpClientErrorException::class.java)
 
         verify(generateNovelService)
-                .generateNovel(eq(TEAPOD))
+                .generateNovel(TEAPOD, null)
     }
 
     @Test
@@ -81,30 +82,41 @@ class GenerateNovelControllerTest {
         serviceThrowsClientException(INTERNAL_SERVER_ERROR)
 
         assertThatThrownBy {
-            generateNovelController.generateNovel("f")
+            generateNovelController.generateNovel("f", null)
         }.isInstanceOf(HttpClientErrorException::class.java)
 
         verify(generateNovelService)
-                .generateNovel(eq(FAILING))
+                .generateNovel(FAILING, null)
     }
 
     @Test
     fun `should pass method PARALLEL to service if method parameter 'p' given`() {
         serviceReturnsNovel()
 
-        generateNovelController.generateNovel("p")
+        generateNovelController.generateNovel("p", null)
 
         verify(generateNovelService)
-                .generateNovel(eq(PARALLEL))
+                .generateNovel(PARALLEL, null)
+    }
+
+    @Test
+    fun `should pass number of paragraphs from parameter 'p'`() {
+        serviceReturnsNovel()
+        val numParagraphs = 42
+
+        generateNovelController.generateNovel(null, numParagraphs)
+
+        verify(generateNovelService)
+                .generateNovel(any(), eq(42))
     }
 
     private fun serviceThrowsClientException(httpStatus: HttpStatus) {
         doThrow(HttpClientErrorException(httpStatus) as Throwable)
-                .`when`(generateNovelService).generateNovel(any())
+                .`when`(generateNovelService).generateNovel(any(), anyOrNull())
     }
 
     private fun serviceReturnsNovel() {
         doReturn(aNovel())
-                .`when`(generateNovelService).generateNovel(any())
+                .`when`(generateNovelService).generateNovel(any(), anyOrNull())
     }
 }

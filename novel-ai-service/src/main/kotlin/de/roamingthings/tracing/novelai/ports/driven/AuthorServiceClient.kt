@@ -12,10 +12,34 @@ class AuthorServiceClient(
         private val log = getLogger(AuthorServiceClient::class.java)
     }
 
-    fun generateNovelContent(): String {
+    fun generateNovelContent(numParagraphs: Int?): String {
         log.info("Asking author for a new novel content")
 
-        return generateNovelContentUsingUrl("/contents")
+        return if (numParagraphs != null) {
+            generateNovelContentWithOptionsUsingUrl("/contents?p={numParagraphs}", numParagraphs)
+        } else {
+            generateNovelContentUsingUrl("/contents")
+        }
+    }
+
+    fun generateNovelContentParallel(numParagraphs: Int?): String {
+        log.info("Asking author for a new novel content in parallel")
+
+        return if (numParagraphs != null) {
+            generateNovelContentWithOptionsUsingUrl("/parallel/contents?p={numParagraphs}", numParagraphs)
+        } else {
+            generateNovelContentUsingUrl("/parallel/contents")
+        }
+    }
+
+    private fun generateNovelContentWithOptionsUsingUrl(serviceUrl: String, numParagraphs: Int): String {
+        val content = authorServiceRestTemplate.postForObject(serviceUrl, null, String::class.java, numParagraphs)
+        log.debug("Got novel content {}", content)
+
+        if (content.isNullOrBlank()) {
+            throw EmptyContentException()
+        }
+        return content
     }
 
     private fun generateNovelContentUsingUrl(serviceUrl: String): String {
@@ -26,12 +50,6 @@ class AuthorServiceClient(
             throw EmptyContentException()
         }
         return content
-    }
-
-    fun generateNovelContentParallel(): String {
-        log.info("Asking author for a new novel content in parallel")
-
-        return generateNovelContentUsingUrl("/parallel/contents")
     }
 
     fun generateNovelContentTeapod() {

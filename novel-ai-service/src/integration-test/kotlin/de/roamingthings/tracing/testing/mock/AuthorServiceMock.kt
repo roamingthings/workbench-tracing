@@ -24,4 +24,12 @@ class AuthorServiceMock : BaseWireMock(AUTHOR_SERVICE_MOCK.port()) {
                         .withBodyFile("post-contents.txt")
                         .withHeader("Content-Type", TEXT_PLAIN_VALUE)))
     }
+
+    fun serviceGeneratesContentWithNumParagraphs() {
+        wireMock.register(post(urlEqualTo("/contents?p=42"))
+                .willReturn(aResponse()
+                        .withStatus(SC_OK)
+                        .withBodyFile("post-contents.txt")
+                        .withHeader("Content-Type", TEXT_PLAIN_VALUE)))
+    }
 }
