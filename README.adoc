@@ -50,7 +50,7 @@ $ curl -v -X POST "http://localhost:9080/novels"
 < Location: /novels/4d0c0295-60da-44f8-9cb6-4abdeb4859a7
 < Content-Length: 0
 
-$ curl -v "http://localhost:9080/novels/e41f24d3-a969-4325-b566-b0dbc4427086"
+$ curl -v "http://localhost:9080/novels/4d0c0295-60da-44f8-9cb6-4abdeb4859a7"
 
 *   Trying ::1...
 * TCP_NODELAY set
