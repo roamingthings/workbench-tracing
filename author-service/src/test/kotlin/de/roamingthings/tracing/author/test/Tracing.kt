@@ -7,7 +7,6 @@ import io.opentracing.Scope
 import io.opentracing.ScopeManager
 import io.opentracing.Span
 import io.opentracing.Tracer
-import org.mockito.Mockito
 import org.mockito.Mockito.lenient
 
 fun mockTracingLenientUsingMock(tracer: Tracer) {
