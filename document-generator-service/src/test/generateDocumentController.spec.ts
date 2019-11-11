@@ -1,7 +1,13 @@
+/* eslint-disable import/first */
+import path from 'path';
+import dotenv from 'dotenv';
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import { fail } from 'assert';
 import app from '../server';
+
+const dotEnvPath = path.resolve(process.cwd(), '.env.test');
+dotenv.config({ path: dotEnvPath });
 
 // Configure chai
 chai.use(chaiHttp);
