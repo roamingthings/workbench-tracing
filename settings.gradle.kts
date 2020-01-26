@@ -1,5 +1,11 @@
 rootProject.name = "workbench-tracing"
 
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+    }
+}
+
 include("authorService")
 include("novelAiService")
 include("textLibraryService")
